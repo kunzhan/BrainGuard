@@ -49,8 +49,7 @@ class Server(object):
         for i in range(self.global_rounds):
             args.logger.info(f"============= Round: {i+1}th =============")
             s_t = time.time()
-            # self.selected_clients = self.select_clients()
-            if i != 0 and i < 600:
+            if i != 0 and i < self.global_rounds:
                 self.send_models(i)
                 # if i % args.eval_interval == 0:
                 #     for client in self.selected_clients:
@@ -63,7 +62,7 @@ class Server(object):
 
             # for client in self.selected_clients:
             #     client.train(self.writer, i, args.logger)
-            if i < 600:
+            if i < self.global_rounds:
                 self.receive_models()
                 self.aggregate_parameters()
                 
@@ -76,12 +75,6 @@ class Server(object):
                     args.logger.info(f'======Start using clients data eval global model======')
                     for client in self.selected_clients:
                         client.eval_global_model(self.global_model, self.writer, i, args.logger)
-            
-            # self.Budget.append(time.time() - s_t)
-            # args.logger.info('-'*50, self.Budget[-1])
-
-        # for client in self.selected_clients:
-        #         client.save_models()
 
     def set_clients(self, args, clientObj):
         for client in self.num_clients:
