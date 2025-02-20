@@ -1,4 +1,4 @@
-# BrainGuard: Privacy-Preserving Multisubject Image Reconstructions from Brain Activities [arXiv](https://arxiv.org/abs/2501.14309)
+# BrainGuard: Privacy-Preserving Multisubject Image Reconstructions from Brain Activities [arXiv](https://arxiv.org/abs/2501.14309) [Project](https://zhibotian.github.io/BrainGuard/)
 
 [Zhibo Tian](https://scholar.google.com/citations?user=HbKGBGgAAAAJ&hl=en), [Ruijie Quan](https://scholar.google.com/citations?user=WKLRPsAAAAAJ&hl=en), [Fan Ma](https://scholar.google.com/citations?user=FyglsaAAAAAJ&hl=en), [Kun Zhan](https://scholar.google.com/citations?user=sk7TcGAAAAAJ&hl=en), [Yi Yang](https://scholar.google.com/citations?hl=en&user=RMSuNFwAAAAJ)
 
