@@ -129,7 +129,7 @@ class RidgeRegression(torch.nn.Module):
         return x
 
 class BrainNetwork(nn.Module):
-  def __init__(self, out_dim_image=768, out_dim_text=768, in_dim=15724, latent_size=768, h=2048, n_blocks=4, norm_type='ln', use_projector=True, act_first=False, drop1=.5, drop2=.15, train_type='vision'):
+  def __init__(self, out_dim_image=768, out_dim_text=768, in_dim=15724, latent_size=768, h=2048, n_blocks=4, norm_type='ln', use_projector=True, act_first=False, drop1=.5, drop2=.15):
     super().__init__()
     norm_func = partial(nn.BatchNorm1d, num_features=h) if norm_type == 'bn' else partial(nn.LayerNorm, normalized_shape=h)
     act_fn = partial(nn.ReLU, inplace=True) if norm_type == 'bn' else nn.GELU
@@ -146,7 +146,7 @@ class BrainNetwork(nn.Module):
     self.n_blocks = n_blocks
     self.latent_size = latent_size
     self.use_projector = use_projector
-    self.train_type = train_type
+    
     if use_projector:
         self.projector_image = nn.Sequential(
         nn.LayerNorm(self.latent_size),

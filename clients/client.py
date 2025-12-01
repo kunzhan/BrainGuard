@@ -1,8 +1,6 @@
 import copy
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader
-from utils.data_utils import read_client_data
 from utils.DFL import DFL
 from utils.loss_avg import AverageMeter
 from utils.utils import soft_clip_loss, Clipper
@@ -11,7 +9,7 @@ from trainmodel.models import *
 import utils.data as data
 from utils.utils import prepare_coco
 
-class client(object):
+class Client(object):
     def __init__(self, args, id, train_samples, cuda_id):
 
         self.cuda_id = cuda_id
@@ -25,7 +23,6 @@ class client(object):
         self.device = 'cuda:{}'.format(self.cuda_id)
         self.id = id
         self.args = args
-        self.num_classes = args.num_classes
         self.train_samples = train_samples
         self.batch_size = args.batch_size
         self.global_rounds = args.global_rounds
@@ -34,7 +31,6 @@ class client(object):
         self.set_opt_grouped_parameters(args)
         self.loss_mse = nn.MSELoss(reduction='mean').to(f'cuda:{self.cuda_id}')
         self.optimizer = torch.optim.AdamW(self.opt_grouped_parameters, betas=(0.9, 0.9999), lr=self.learning_rate, eps=1e-8)
-        self.train_type = args.train_type
         self.prompts_list = prepare_coco(args.data_root)
         self.clip_extractor = self.prepare_CLIP(args, self.device)
 
@@ -218,6 +214,7 @@ class client(object):
 
 
     def eval_global_model(self, global_model, writer, round, logger):
+        
         global_sims_base_image = AverageMeter()
         global_sims_base_text = AverageMeter()
         global_loss_base_nce_image = AverageMeter()
@@ -301,19 +298,6 @@ class client(object):
         if self.flag_dfl:
             self.DFL.adaptive_local_aggregation(temp_global_model, self.model, writer, round, self.clip_extractor, self.prompts_list)
 
-
-    def load_train_data(self, batch_size=None, is_train=True):
-
-        if batch_size == None:
-            batch_size = self.batch_size
-        train_data, test_data = read_client_data(self.id, self.args.train_type)
-        if is_train:
-            return DataLoader(train_data, batch_size, drop_last=False, shuffle=True, num_workers=4)
-        else:
-            if self.resume:
-                return DataLoader(test_data, batch_size=1, drop_last=False, shuffle=False, num_workers=4)
-            else:
-                return DataLoader(test_data, batch_size=self.batch_size, drop_last=False, shuffle=False, num_workers=4)
     
     def set_opt_grouped_parameters(self, args):
         no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
