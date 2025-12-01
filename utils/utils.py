@@ -26,6 +26,9 @@ def init_log(name, level=logging.INFO):
     logger.addHandler(ch)
     return logger
 
+def count_params(model):
+    param_num = sum(p.numel() for p in model.parameters())
+    return param_num / 1e6
 
 def batchwise_cosine_similarity(Z,B):
     # https://www.h4pz.co/blog/2021/4/2/batch-cosine-similarity-in-pytorch-or-numpy-jax-cupy-etc
